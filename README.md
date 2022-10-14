@@ -1,9 +1,7 @@
 # ORB_SLAM
-Implementation of ORB SLAM algorithm on sample images.
+**Scenario: Add SLAM capabilities in a low-cost drone which has a monocular camera and a few sensors (IMU, altitude)**
 
-For this project, I chose to attack this from a total design standpoint. I defined theoretical system requirements, conducted research into algorithms based on those requirements, and implemented my possible solution.
-
-*Scenario: Add SLAM capabilities in a low-cost drone which has a monocular camera and a few sensors (IMU, altitude)*
+For this project, I chose to attack this from a total design standpoint. I defined system requirements, conducted research into algorithms based on those requirements, and implemented my possible solution.
 
 ## 1) Understanding System Requirements
 - Program shall be minimally computationally-intensive
@@ -12,20 +10,20 @@ For this project, I chose to attack this from a total design standpoint. I defin
 
 ## 2) Defining System Inputs and Outputs
 - **Inputs:**
-  - h264 formatted video stream - 30 Hz
-  - Telemetry data - 10 Hz
-  - Flight plan including waypoints
+  - Video stream - 30 Hz
+  - Telemetry data (sensors) - 10 Hz
+  - Flight plan including predefined waypoints
 
 - **Outputs:**
   - Pose estimation of drone
   - Global map of drone's environment
 
 ## 3) Researching Existing Algorithms
-Common SLAM algorithms use data from LIDAR sensors due to the accuracy of such sensors when obtaining depth data. As this situation involves a drone system equipped with a camera system, I researched Visual SLAM or **VSLAM**. Many VSLAM algorithms utilize stereo  or RGB-D cameras as these cameras are able to easily define depth data in the images. For the purposes of this program, we must look at *monocular VSLAM* which utilizes a monocular camera such as the one mounted on the drone. 
+Common SLAM algorithms use data from LIDAR sensors due to the accuracy of such sensors when obtaining depth data. As this situation involves a drone system equipped with a camera, I researched Visual SLAM or **VSLAM**. Many VSLAM algorithms utilize stereo or RGB-D cameras as these cameras are able to easily define depth data in the images. For the purposes of this program, we must look at *monocular VSLAM* which utilizes a monocular camera such as the basic one mounted on the drone. 
 
 While systems such as Dense Tracking and Mapping (DTAM) have shown promising results without relying on feature extraction, such methods are compute-heavy and dependent upon GPU computation which marks them as infeasible for a mobile device[^1]. Semi-Direct Monocular Visual Odometry (SVO) is commonly used for aerial vehicles in outdoor environments however it does not account for a global map and is highly sensitive to lighting changes[^2]. Two of the current state-of-the-art monocular VSLAM systems are Large-Scale Direct Monocular SLAM (**LSD-SLAM**), and Oriented FAST and Rotated BRIEF SLAM (**ORB-SLAM**). While LSD-SLAM can be more powerful and deliver better 3D reconstructions, it is more computationally-intensive considering that it is a direct method and therefore processes a significantly larger quantity of data than ORB-SLAM. ORB-SLAM was also found to rank highest with regards to geometric accuracy[^3]. In addition, ORB feature detection can occur in real-time and is robust againt intense movement as well as allows for re-localization. This is important for this system considering the temporal jumps due to signal loss or image capture.
 
-Therefore, I will be detailing an algorithm that implements *ORB-feature mapping* for the purposes of this program as it is efficient and accuracte as well as capable of running on a mobile device.
+Therefore, I will be detailing an algorithm that implements *ORB-feature mapping* for the purposes of this program as it is efficient and accurate as well as capable of running on a mobile device.
 
 ## 4) Algorithm
 Below, I describe the algorithm designed to carry out the task specified by the prompt.
